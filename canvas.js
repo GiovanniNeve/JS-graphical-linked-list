@@ -2,7 +2,7 @@
 var canvas = document.getElementById("newCanvas");
 var ctx = canvas.getContext("2d");
 var screenWidth = 1500;
-var screenHeight = 650;
+var screenHeight = 600;
 var maxNumber = 0;
 var arraylength = 0;
 
@@ -27,23 +27,25 @@ class Node {
     }
 
     setxPos(x) {
-        this.xPos += x;
+        this.xPos = x;
     }
 
 }
 
-/* List class */
+/* -------------------------------------------------- List class -------------------------------------------------- */
 
 class linkedList {
     constructor() {
         this.node = new Node();
     }
 
+    /* ------------------------------ Make node ------------------------------ */
     makeNode(data) {
         var newNode = new Node(data);
         return newNode;
     }
 
+    /* ------------------------------ Insert node ------------------------------ */
     insertNode(node, data) {
         if (!node) {
             node = this.makeNode(data);
@@ -59,15 +61,17 @@ class linkedList {
 
     }
 
+    /* ------------------------------ Draw list ------------------------------ */
     drawList(node) {
         ctx.beginPath();
         ctx.clearRect(0, 0, screenWidth, screenHeight);
         ctx.stroke();
 
-        var xPosition = 0;
+        var width = screenWidth / arraylength;
+        var xPosition = -(width);
+
         while (node) {
             var height = (screenHeight * node.data) / maxNumber;
-            var width = screenWidth / arraylength;
             node.setHeight(height);
             node.setWidth(width);
             node.setxPos(xPosition);
@@ -75,12 +79,15 @@ class linkedList {
             ctx.beginPath();
             ctx.rect(node.xPos, 0, node.width, node.height);
             ctx.stroke();
+            console.log(node.xPos);
+            node.setxPos(0);
 
             xPosition += node.width;
             node = node.next;
         }
     }
 
+    /* ------------------------------ Print node ------------------------------ */
     printNode(node) {
         while (node) {
             console.log(node.data);
@@ -106,6 +113,7 @@ class linkedList {
             var change = node.data;
             node.data = min.data;
             min.data = change;
+            this.drawList(node);
             node = node.next;
         }
         return node;
@@ -113,47 +121,49 @@ class linkedList {
 
 }
 
-var list = new linkedList();
+/* -------------------------------------------------- Main -------------------------------------------------- */
 
-/* Main function activated by the button (Button) */
+var list = new linkedList(); /* Create linled list class object */
+
+/* ---------- Manual insert data in the list (Button) ---------- */
 function startTree() {
 
     var values = document.getElementById("primaryInput").value;
-    arraylength = values.length;
+    arraylength = values.length; /* Get array lenght */
     for (var index = 0; index < values.length; index++) {
         if (Number(maxNumber) < Number(values[index])) {
-            maxNumber = values[index];
+            maxNumber = values[index]; /* Get the highest number in the array */
         }
-        list.insertNode(list.node, values[index]);
+        list.insertNode(list.node, values[index]); /* Call the insertNode function */
     }
 
-    document.getElementById("primaryInput").value = "";
+    document.getElementById("primaryInput").value = ""; /* Clear input section */
 }
 
-/* Function who prints the linked list (Button) */
+/* ---------- Function who prints the linked list (Button) ---------- */
 function printList() {
-    list.printNode(list.node);
+    list.printNode(list.node); /* Call the printNode function */
 }
 
-/* Function who draws the list in the cancvas (Button) */
+/* ---------- Function who draws the list in the cancvas (Button) ---------- */
 function drawNode() {
-    list.drawList(list.node);
+    list.drawList(list.node); /* Call the drawList function */
 }
 
-/* Insert random numbers in the list (Button) */
+/* ---------- Insert random numbers in the list (Button) ---------- */
 function randomInsert() {
     for (var i = 0; i < 100; i++) {
         var data = Math.floor(Math.random() * 100) + 1;
         list.insertNode(list.node, data);
-        arraylength += 1;
+        arraylength += 1; /* Get array length */
         if (Number(maxNumber) < Number(data)) {
-            maxNumber = data;
+            maxNumber = data; /* Get max number */
         }
     }
     console.log("Random insert done");
 }
 
-/* Sort the list with the selection sort alorithm */
+/* ---------- Sort the list with the selection sort alorithm (Button) ---------- */
 function selectionSort() {
     list.selectionSort(list.node);
 }
