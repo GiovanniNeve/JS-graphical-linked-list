@@ -79,7 +79,6 @@ class linkedList {
             ctx.beginPath();
             ctx.rect(node.xPos, 0, node.width, node.height);
             ctx.stroke();
-            console.log(node.xPos);
             node.setxPos(0);
 
             xPosition += node.width;
@@ -94,6 +93,8 @@ class linkedList {
             node = node.next;
         }
     }
+
+    /* Selection sort function */
 
     selectionSort(node) {
         while (node) {
@@ -113,7 +114,6 @@ class linkedList {
             var change = node.data;
             node.data = min.data;
             min.data = change;
-            this.drawList(node);
             node = node.next;
         }
         return node;
@@ -166,4 +166,5 @@ function randomInsert() {
 /* ---------- Sort the list with the selection sort alorithm (Button) ---------- */
 function selectionSort() {
     list.selectionSort(list.node);
+    list.drawList(list.node);
 }
