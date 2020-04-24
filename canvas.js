@@ -6,7 +6,7 @@ var screenHeight = 600;
 var maxNumber = 0;
 var arraylength = 0;
 
-/* Node class */
+/* -------------------------------------------------- Node class -------------------------------------------------- */
 
 class Node {
     width;
@@ -37,6 +37,7 @@ class Node {
 class linkedList {
     constructor() {
         this.node = new Node();
+        this.node.data = 5;
     }
 
     /* ------------------------------ Make node ------------------------------ */
@@ -61,31 +62,6 @@ class linkedList {
 
     }
 
-    /* ------------------------------ Draw list ------------------------------ */
-    drawList(node) {
-        ctx.beginPath();
-        ctx.clearRect(0, 0, screenWidth, screenHeight);
-        ctx.stroke();
-
-        var width = screenWidth / arraylength;
-        var xPosition = -(width);
-
-        while (node) {
-            var height = (screenHeight * node.data) / maxNumber;
-            node.setHeight(height);
-            node.setWidth(width);
-            node.setxPos(xPosition);
-
-            ctx.beginPath();
-            ctx.rect(node.xPos, 0, node.width, node.height);
-            ctx.stroke();
-            node.setxPos(0);
-
-            xPosition += node.width;
-            node = node.next;
-        }
-    }
-
     /* ------------------------------ Print node ------------------------------ */
     printNode(node) {
         while (node) {
@@ -94,9 +70,71 @@ class linkedList {
         }
     }
 
-    /* Selection sort function */
+    /* ------------------------------ Clear screen ------------------------------ */
+    clearScreen() {
+        ctx.beginPath();
+        ctx.clearRect(0, 0, screenWidth, screenHeight);
+        ctx.stroke();
+    }
 
-    selectionSort(node) {
+    /* ------------------------------ Clear node ------------------------------ */
+    clearNode(node) {
+        ctx.beginPath();
+        ctx.clearRect(node.xPos, 0, node.width, screenHeight);
+        ctx.stroke();
+    }
+
+    /* ------------------------------ Delay for draw list ------------------------------ */
+    sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    /* ------------------------------ Draw single node ------------------------------ */
+    colorNode(node, color) {
+        var width = screenWidth / arraylength;
+        //var xPosition = -(width);
+        var height = (screenHeight * node.data) / maxNumber;
+
+        node.setHeight(height);
+        node.setWidth(width);
+        //node.setxPos(xPosition);
+
+        ctx.beginPath();
+        ctx.fillStyle = color;
+        ctx.fillRect(node.xPos, 0, node.width, node.height);
+        ctx.stroke();
+
+        //node.setxPos(0);
+    }
+
+    /* ------------------------------ Draw list ------------------------------ */
+    async drawList(node) {
+        var width = screenWidth / arraylength;
+        var xPosition = 0;
+
+        while (node) {
+            await this.sleep(50);
+            var height = (screenHeight * node.data) / maxNumber;
+            node.setHeight(height);
+            node.setWidth(width);
+            node.setxPos(xPosition);
+
+            ctx.beginPath();
+            ctx.rect(node.xPos, 0, node.width, node.height);
+            ctx.stroke();
+            //node.setxPos(0);
+
+            xPosition += node.width;
+            node = node.next;
+        }
+        console.log("Draw list done");
+    }
+
+    /* ------------------------------ Selection sort ------------------------------ */
+    async selectionSort(node) {
+        var width = screenWidth / arraylength;
+        var xPosition = -(width);
+
         while (node) {
             if (!node.next) {
                 return node;
@@ -104,22 +142,48 @@ class linkedList {
 
             var copyNode = node.next;
             var min = node;
+            this.colorNode(node, "blue")
+            await this.sleep(100);
 
             while (copyNode) {
+                this.colorNode(copyNode, "red")
+                await this.sleep(30);
+
                 if (Number(min.data) > Number(copyNode.data)) {
                     min = copyNode;
                 }
+
+                this.colorNode(copyNode, "gray")
+                await this.sleep(100);
                 copyNode = copyNode.next;
+
             }
+            this.colorNode(node, "grey")
+            await this.sleep(100);
+
+            this.clearNode(node);
+            this.clearNode(min);
+
             var change = node.data;
             node.data = min.data;
             min.data = change;
+            xPosition += width;
+
+
+            this.colorNode(node, "green")
+            await this.sleep(100);
+
+            this.colorNode(min, "gray")
+            await this.sleep(100);
+
             node = node.next;
+            //xPosition += width;
         }
         return node;
     }
 
 }
+
 
 /* -------------------------------------------------- Main -------------------------------------------------- */
 
@@ -147,13 +211,14 @@ function printList() {
 
 /* ---------- Function who draws the list in the cancvas (Button) ---------- */
 function drawNode() {
+    list.clearScreen();
     list.drawList(list.node); /* Call the drawList function */
 }
 
 /* ---------- Insert random numbers in the list (Button) ---------- */
 function randomInsert() {
     for (var i = 0; i < 100; i++) {
-        var data = Math.floor(Math.random() * 100) + 1;
+        var data = Math.floor(Math.random() * 99);
         list.insertNode(list.node, data);
         arraylength += 1; /* Get array length */
         if (Number(maxNumber) < Number(data)) {
@@ -166,5 +231,4 @@ function randomInsert() {
 /* ---------- Sort the list with the selection sort alorithm (Button) ---------- */
 function selectionSort() {
     list.selectionSort(list.node);
-    list.drawList(list.node);
 }
