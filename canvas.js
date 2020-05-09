@@ -5,6 +5,7 @@ var screenWidth = 1500;
 var screenHeight = 600;
 var maxNumber = 0;
 var arraylength = 0;
+var delayTime = 30;
 
 /* -------------------------------------------------- Node class -------------------------------------------------- */
 
@@ -16,6 +17,7 @@ class Node {
     constructor(data) {
         this.data = data;
         this.next = null;
+        this.prev = null;
     }
 
     setWidth(w) {
@@ -41,22 +43,24 @@ class linkedList {
     }
 
     /* ------------------------------ Make node ------------------------------ */
-    makeNode(data) {
+    makeNode(node, data) {
         var newNode = new Node(data);
+        newNode.prev = node;
+
         return newNode;
     }
 
     /* ------------------------------ Insert node ------------------------------ */
     insertNode(node, data) {
         if (!node) {
-            node = this.makeNode(data);
+            node = this.makeNode(node, data);
             return node;
         }
         while (node.next) {
             node = node.next;
         }
         if (!node.next) {
-            node.next = this.makeNode(data);
+            node.next = this.makeNode(node, data);
             return node;
         }
 
@@ -147,7 +151,7 @@ class linkedList {
 
             while (copyNode) {
                 this.colorNode(copyNode, "red")
-                await this.sleep(30);
+                await this.sleep(delayTime);
 
                 if (Number(min.data) > Number(copyNode.data)) {
                     min = copyNode;
@@ -158,23 +162,31 @@ class linkedList {
                 copyNode = copyNode.next;
 
             }
-            this.colorNode(node, "grey")
-            await this.sleep(100);
 
             this.clearNode(node);
             this.clearNode(min);
 
-            var change = node.data;
-            node.data = min.data;
-            min.data = change;
-            xPosition += width;
+            if (min.data < node.data) {
+                var change = node.data;
+                node.data = min.data;
+                min.data = change;
+                xPosition += width;
 
 
-            this.colorNode(node, "green")
-            await this.sleep(100);
+                this.colorNode(node, "green")
+                await this.sleep(100);
 
-            this.colorNode(min, "gray")
-            await this.sleep(100);
+                this.colorNode(min, "gray")
+                await this.sleep(100);
+
+            } else {
+
+                this.colorNode(node, "gray")
+                await this.sleep(100);
+
+                this.colorNode(min, "green")
+                await this.sleep(100);
+            }
 
             node = node.next;
             //xPosition += width;
@@ -182,32 +194,79 @@ class linkedList {
         return node;
     }
 
-}
+    /* ------------------------------ Insertion sort ------------------------------ */
+    async insertionSort(node) {
+        var change;
 
+        if (!node) {
+            return node;
+        }
+
+        while (node.next) {
+            var nextNode = node.next;
+            var copyNode = node;
+            var sortedList = node.prev;
+
+            this.colorNode(node, "Blue");
+            this.colorNode(nextNode, "Red");
+            await this.sleep(delayTime);
+
+            if (node.data > nextNode.data) {
+                change = node.data;
+                node.data = nextNode.data;
+                nextNode.data = change;
+
+                while (sortedList) {
+                    this.colorNode(copyNode, "Red");
+                    this.colorNode(sortedList, "Yellow");
+                    await this.sleep(delayTime);
+
+                    if (sortedList.data > copyNode.data) {
+                        change = copyNode.data;
+                        copyNode.data = sortedList.data;
+                        sortedList.data = change;
+
+                        this.clearNode(sortedList);
+                        this.clearNode(copyNode);
+                        this.colorNode(sortedList, "Green");
+                        this.colorNode(copyNode, "Green");
+                        await this.sleep(100);
+
+                        sortedList = sortedList.prev;
+                        copyNode = copyNode.prev;
+                    } else {
+                        this.colorNode(copyNode, "Green");
+                        this.colorNode(sortedList, "Green");
+                        await this.sleep(100);
+                        break;
+                    }
+
+                }
+
+            }
+
+            //console.log(node.data);
+            this.clearNode(node);
+            this.colorNode(node, "Green");
+            await this.sleep(100);
+            node = node.next;
+        }
+
+        return node;
+    }
+
+    consolePrint(node) {
+        while (node) {
+            console.log(node.data);
+            node = node.next;
+        }
+    }
+
+}
 
 /* -------------------------------------------------- Main -------------------------------------------------- */
 
 var list = new linkedList(); /* Create linled list class object */
-
-/* ---------- Manual insert data in the list (Button) ---------- */
-function startTree() {
-
-    var values = document.getElementById("primaryInput").value;
-    arraylength = values.length; /* Get array lenght */
-    for (var index = 0; index < values.length; index++) {
-        if (Number(maxNumber) < Number(values[index])) {
-            maxNumber = values[index]; /* Get the highest number in the array */
-        }
-        list.insertNode(list.node, values[index]); /* Call the insertNode function */
-    }
-
-    document.getElementById("primaryInput").value = ""; /* Clear input section */
-}
-
-/* ---------- Function who prints the linked list (Button) ---------- */
-function printList() {
-    list.printNode(list.node); /* Call the printNode function */
-}
 
 /* ---------- Function who draws the list in the cancvas (Button) ---------- */
 function drawNode() {
@@ -217,8 +276,8 @@ function drawNode() {
 
 /* ---------- Insert random numbers in the list (Button) ---------- */
 function randomInsert() {
-    for (var i = 0; i < 100; i++) {
-        var data = Math.floor(Math.random() * 99);
+    for (var i = 0; i < 29; i++) {
+        var data = Math.floor(Math.random() * 200) + 1;
         list.insertNode(list.node, data);
         arraylength += 1; /* Get array length */
         if (Number(maxNumber) < Number(data)) {
@@ -231,4 +290,16 @@ function randomInsert() {
 /* ---------- Sort the list with the selection sort alorithm (Button) ---------- */
 function selectionSort() {
     list.selectionSort(list.node);
+}
+
+/* ---------- Set animation delay (Button) ---------- */
+function setDelay() {
+    delayTime = document.querySelector(".delayButton > select").value;
+}
+
+/* ---------- Insertion sort (Button) ---------- */
+
+function insertionSort() {
+    list.insertionSort(list.node);
+    console.log("Insertion sort done");
 }

@@ -15,13 +15,24 @@
 <body>
 
     <h1> Graphical linked list </h1>
-    <input type="text" value="" id="primaryInput"></input>
 
-    <button onclick="startTree()">Insert</button>
-    <button onclick="printList()">Print</button>
     <button onclick="drawNode()">Draw</button>
-    <button onclick="selectionSort()">Sort</button>
     <button onclick="randomInsert()">Random insert</button>
+    <button onclick="selectionSort()">Selection sort</button>
+    <button onclick="insertionSort()">Insertion sort</button>
+
+    <div class="delayButton">
+        <select required>
+        <option value=""></option>
+        <option value="1">1</option>
+        <option value="10">10</option>
+        <option value="30">30</option>
+        <option value="50">50</option>
+        <option value="80">80</option>
+        <option value="100">100</option>
+    </select>
+        <button onclick="setDelay()">Delay</button>
+    </div>
 
     <canvas id="newCanvas" width="1500" height="600">
 
