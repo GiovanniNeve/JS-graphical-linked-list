@@ -38,7 +38,7 @@ function insertionSort() {
 }
 
 /* ---------- Merge sort (Button) ---------- */
-function mergeSort() {
-    list.mergeSort(list.node);
-    console.log("Merge sort done");
+function BubbleSort() {
+    list.bubbleSort(list.node);
+    console.log("Bubble sort done");
 }

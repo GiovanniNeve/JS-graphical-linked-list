@@ -255,59 +255,53 @@ class linkedList {
         return node;
     }
 
-    /* ------------------------------ Merge sort ------------------------------ */
-    mergeSort(node) {
+    /* ------------------------------ Print data in console ------------------------------ */
+    async bubbleSort(node) {
         if (!node || !node.next) {
-            return node;
+            return;
         }
 
-        let first = node;
-        let second = this.splitNode(node);
+        while (node) {
 
-        first = this.mergeSort(first);
-        second = this.mergeSort(second);
+            if (!node.next) {
+                return node;
+            }
 
-        node = this.mergeSorting(first, second);
+            //this.colorNode(node, "blue");
+            await this.sleep(100);
+
+            var nextNode = node.next;
+
+            while (nextNode) {
+                this.colorNode(nextNode, "blue");
+                await this.sleep(100);
+
+                if (Number(node.data) > Number(nextNode.data)) {
+                    var change = node.data;
+                    node.data = nextNode.data;
+                    nextNode.data = change;
+
+                    this.clearNode(nextNode);
+                    this.colorNode(nextNode, "blue");
+                    await this.sleep(100);
+
+                    this.clearNode(node);
+                    this.colorNode(node, "Yellow");
+                    await this.sleep(100);
+                }
+
+                this.colorNode(nextNode, "grey");
+                await this.sleep(100);
+
+                nextNode = nextNode.next;
+            }
+
+            node = node.next;
+        }
+
         return node;
     }
 
-    mergeSorting(first, second) {
-        if (!first) {
-            return second;
-        }
-        if (!second) {
-            return first;
-        }
-
-        if (first.data < second.data) {
-            first.next = this.mergeSorting(first.next, second);
-            first.next.prev = first;
-            first.prev = null;
-            return first;
-
-        } else if (first.data > second.data) {
-            second.next = this.mergeSorting(first, second.next);
-            second.next.prev = second;
-            second.prev = null;
-            return second;
-        }
-
-    }
-
-    splitNode(node) {
-        let back = node;
-        let front = node.next;
-
-        while (front.next) {
-            front = front.next;
-            if (front.next) {
-                back = back.next;
-                front = front.next;
-            }
-        }
-
-        return back.next;
-    }
 
     /* ------------------------------ Print data in console ------------------------------ */
     consolePrint(node) {
