@@ -4,7 +4,7 @@ var ctx = canvas.getContext("2d");
 var screenWidth = 1500;
 var screenHeight = 600;
 var maxNumber = 0;
-var arraylength = 0;
+var arraylength = 1;
 var delayTime = 30;
 
 /* -------------------------------------------------- Node class -------------------------------------------------- */
@@ -255,7 +255,7 @@ class linkedList {
         return node;
     }
 
-    /* ------------------------------ Print data in console ------------------------------ */
+    /* ------------------------------ Bubble Sort ------------------------------ */
     async bubbleSort(node) {
         if (!node || !node.next) {
             return;
@@ -267,35 +267,33 @@ class linkedList {
                 return node;
             }
 
-            //this.colorNode(node, "blue");
-            await this.sleep(100);
-
+            var copyNode = node;
             var nextNode = node.next;
 
             while (nextNode) {
-                this.colorNode(nextNode, "blue");
+                this.colorNode(copyNode, "red");
+                this.colorNode(nextNode, "red");
                 await this.sleep(100);
 
                 if (Number(node.data) > Number(nextNode.data)) {
                     var change = node.data;
                     node.data = nextNode.data;
                     nextNode.data = change;
-
-                    this.clearNode(nextNode);
-                    this.colorNode(nextNode, "blue");
-                    await this.sleep(100);
-
-                    this.clearNode(node);
-                    this.colorNode(node, "Yellow");
-                    await this.sleep(100);
                 }
 
-                this.colorNode(nextNode, "grey");
+                this.clearNode(copyNode);
+                this.clearNode(nextNode);
+                this.colorNode(copyNode, "gray");
+                this.colorNode(nextNode, "gray");
                 await this.sleep(100);
 
+                copyNode = copyNode.next;
                 nextNode = nextNode.next;
             }
 
+            this.clearNode(node);
+            this.colorNode(node, "green");
+            await this.sleep(100);
             node = node.next;
         }
 

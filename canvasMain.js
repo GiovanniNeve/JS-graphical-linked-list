@@ -2,11 +2,6 @@
 
 var list = new linkedList(); /* Create linled list class object */
 
-/* ---------- Function who draws the list in the cancvas (Button) ---------- */
-function drawNode() {
-    list.clearScreen();
-    list.drawList(list.node); /* Call the drawList function */
-}
 
 /* ---------- Insert random numbers in the list (Button) ---------- */
 function randomInsert() {
@@ -19,6 +14,8 @@ function randomInsert() {
         }
     }
     console.log("Random insert done");
+    list.clearScreen();
+    list.drawList(list.node); /* Call the drawList function */
 }
 
 /* ---------- Sort the list with the selection sort alorithm (Button) ---------- */
