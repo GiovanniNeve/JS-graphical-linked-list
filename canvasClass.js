@@ -147,7 +147,7 @@ class linkedList {
             var copyNode = node.next;
             var min = node;
             this.colorNode(node, "blue")
-            await this.sleep(100);
+            await this.sleep(delayTime);
 
             while (copyNode) {
                 this.colorNode(copyNode, "red")
@@ -158,7 +158,7 @@ class linkedList {
                 }
 
                 this.colorNode(copyNode, "gray")
-                await this.sleep(100);
+                await this.sleep(delayTime);
                 copyNode = copyNode.next;
 
             }
@@ -174,18 +174,18 @@ class linkedList {
 
 
                 this.colorNode(node, "green")
-                await this.sleep(100);
+                await this.sleep(delayTime);
 
                 this.colorNode(min, "gray")
-                await this.sleep(100);
+                await this.sleep(delayTime);
 
             } else {
 
                 this.colorNode(node, "gray")
-                await this.sleep(100);
+                await this.sleep(delayTime);
 
                 this.colorNode(min, "green")
-                await this.sleep(100);
+                await this.sleep(delayTime);
             }
 
             node = node.next;
@@ -216,6 +216,10 @@ class linkedList {
                 node.data = nextNode.data;
                 nextNode.data = change;
 
+                this.colorNode(node, "Blue");
+                this.colorNode(nextNode, "Red");
+                await this.sleep(delayTime);
+
                 while (sortedList) {
                     this.colorNode(copyNode, "Red");
                     this.colorNode(sortedList, "Yellow");
@@ -230,14 +234,14 @@ class linkedList {
                         this.clearNode(copyNode);
                         this.colorNode(sortedList, "Green");
                         this.colorNode(copyNode, "Green");
-                        await this.sleep(100);
+                        await this.sleep(delayTime);
 
                         sortedList = sortedList.prev;
                         copyNode = copyNode.prev;
                     } else {
                         this.colorNode(copyNode, "Green");
                         this.colorNode(sortedList, "Green");
-                        await this.sleep(100);
+                        await this.sleep(delayTime);
                         break;
                     }
 
@@ -248,7 +252,7 @@ class linkedList {
             //console.log(node.data);
             this.clearNode(node);
             this.colorNode(node, "Green");
-            await this.sleep(100);
+            await this.sleep(delayTime);
             node = node.next;
         }
 
@@ -273,7 +277,7 @@ class linkedList {
             while (nextNode) {
                 this.colorNode(copyNode, "red");
                 this.colorNode(nextNode, "red");
-                await this.sleep(100);
+                await this.sleep(delayTime);
 
                 if (Number(node.data) > Number(nextNode.data)) {
                     var change = node.data;
@@ -283,9 +287,14 @@ class linkedList {
 
                 this.clearNode(copyNode);
                 this.clearNode(nextNode);
+                this.colorNode(copyNode, "red");
+                this.colorNode(nextNode, "red");
+                await this.sleep(delayTime);
+
+                this.clearNode(copyNode);
+                this.clearNode(nextNode);
                 this.colorNode(copyNode, "gray");
                 this.colorNode(nextNode, "gray");
-                await this.sleep(100);
 
                 copyNode = copyNode.next;
                 nextNode = nextNode.next;
@@ -293,7 +302,7 @@ class linkedList {
 
             this.clearNode(node);
             this.colorNode(node, "green");
-            await this.sleep(100);
+            await this.sleep(delayTime);
             node = node.next;
         }
 
