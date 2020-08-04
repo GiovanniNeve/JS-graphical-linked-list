@@ -6,6 +6,7 @@ var screenHeight = 600;
 var maxNumber = 0;
 var arraylength = 1;
 var delayTime = 30;
+var lastNode;
 
 /* -------------------------------------------------- Node class -------------------------------------------------- */
 
@@ -54,6 +55,7 @@ class linkedList {
     insertNode(node, data) {
         if (!node) {
             node = this.makeNode(null, data);
+            lastNode = node;
             return node;
         }
         while (node.next) {
@@ -61,6 +63,7 @@ class linkedList {
         }
         if (!node.next) {
             node.next = this.makeNode(node, data);
+            lastNode = node.next;
             return node;
         }
 
@@ -117,7 +120,7 @@ class linkedList {
         var xPosition = 0;
 
         while (node) {
-            await this.sleep(50);
+            await this.sleep(delayTime);
             var height = (screenHeight * node.data) / maxNumber;
             node.setHeight(height);
             node.setWidth(width);
@@ -132,6 +135,20 @@ class linkedList {
             node = node.next;
         }
         console.log("Draw list done");
+    }
+
+    async sortCheck(node) {
+        while (node.next) {
+            if (node.data <= node.next.data) {
+                this.clearNode(node);
+                this.colorNode(node, "Green");
+                await this.sleep(node);
+            }
+            node = node.next;
+        }
+        this.clearNode(node);
+        this.colorNode(node, "Green");
+        await this.sleep(node);
     }
 
     /* ------------------------------ Selection sort ------------------------------ */
@@ -173,7 +190,7 @@ class linkedList {
                 xPosition += width;
 
 
-                this.colorNode(node, "green")
+                this.colorNode(node, "Yellow")
                 await this.sleep(delayTime);
 
                 this.colorNode(min, "gray")
@@ -184,7 +201,7 @@ class linkedList {
                 this.colorNode(node, "gray")
                 await this.sleep(delayTime);
 
-                this.colorNode(min, "green")
+                this.colorNode(min, "Yellow")
                 await this.sleep(delayTime);
             }
 
@@ -232,15 +249,15 @@ class linkedList {
 
                         this.clearNode(sortedList);
                         this.clearNode(copyNode);
-                        this.colorNode(sortedList, "Green");
-                        this.colorNode(copyNode, "Green");
+                        this.colorNode(sortedList, "Yellow");
+                        this.colorNode(copyNode, "Yellow");
                         await this.sleep(delayTime);
 
                         sortedList = sortedList.prev;
                         copyNode = copyNode.prev;
                     } else {
-                        this.colorNode(copyNode, "Green");
-                        this.colorNode(sortedList, "Green");
+                        this.colorNode(copyNode, "Yellow");
+                        this.colorNode(sortedList, "Yellow");
                         await this.sleep(delayTime);
                         break;
                     }
@@ -251,7 +268,7 @@ class linkedList {
 
             //console.log(node.data);
             this.clearNode(node);
-            this.colorNode(node, "Green");
+            this.colorNode(node, "Yellow");
             await this.sleep(delayTime);
             node = node.next;
         }
@@ -265,24 +282,40 @@ class linkedList {
             return;
         }
 
+        var startNode = node;
+
         while (node) {
 
             if (!node.next) {
                 return node;
             }
 
-            var copyNode = node;
-            var nextNode = node.next;
+            var swapped = false;
+            var copyNode = startNode;
+            var nextNode = startNode.next;
+
+            this.clearNode(lastNode);
+            this.colorNode(lastNode, "Purple");
+            await this.sleep(delayTime);
 
             while (nextNode) {
+
                 this.colorNode(copyNode, "red");
                 this.colorNode(nextNode, "red");
                 await this.sleep(delayTime);
 
-                if (Number(node.data) > Number(nextNode.data)) {
-                    var change = node.data;
-                    node.data = nextNode.data;
-                    nextNode.data = change;
+                if (Number(copyNode.data) > Number(nextNode.data) && copyNode !== lastNode) {
+                    var change = nextNode.data;
+                    nextNode.data = copyNode.data;
+                    copyNode.data = change;
+                    swapped = true;
+                } else if (copyNode === lastNode) {
+                    this.clearNode(copyNode);
+                    this.clearNode(nextNode);
+                    this.colorNode(copyNode, "yellow");
+                    this.colorNode(nextNode, "yellow");
+
+                    break;
                 }
 
                 this.clearNode(copyNode);
@@ -300,10 +333,17 @@ class linkedList {
                 nextNode = nextNode.next;
             }
 
+            if (!swapped) {
+                break;
+            }
+
+            /*
             this.clearNode(node);
-            this.colorNode(node, "green");
+            this.colorNode(node, "Yellow");
             await this.sleep(delayTime);
+            */
             node = node.next;
+            lastNode = lastNode.prev;
         }
 
         return node;

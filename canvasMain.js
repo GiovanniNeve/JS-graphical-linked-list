@@ -2,7 +2,6 @@
 
 var list = new linkedList(); /* Create linled list class object */
 
-
 /* ---------- Insert random numbers in the list (Button) ---------- */
 function randomInsert() {
     for (var i = 0; i < 29; i++) {
@@ -19,8 +18,10 @@ function randomInsert() {
 }
 
 /* ---------- Sort the list with the selection sort alorithm (Button) ---------- */
-function selectionSort() {
-    list.selectionSort(list.node);
+async function selectionSort() {
+    await list.selectionSort(list.node);
+    console.log("Selection sort done");
+    list.sortCheck(list.node);
 }
 
 /* ---------- Set animation delay (Button) ---------- */
@@ -29,13 +30,15 @@ function setDelay() {
 }
 
 /* ---------- Insertion sort (Button) ---------- */
-function insertionSort() {
-    list.insertionSort(list.node);
+async function insertionSort() {
+    await list.insertionSort(list.node);
     console.log("Insertion sort done");
+    list.sortCheck(list.node);
 }
 
 /* ---------- Merge sort (Button) ---------- */
-function BubbleSort() {
-    list.bubbleSort(list.node);
+async function BubbleSort() {
+    await list.bubbleSort(list.node);
     console.log("Bubble sort done");
+    list.sortCheck(list.node);
 }
